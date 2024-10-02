@@ -29,9 +29,19 @@ def gemini_chat():
     try:
 
         prompt = f"""
-        Using the information delimited by the triple backticks to help you answer the prompt delimited by the triple apostrophes. 
+        Answer the prompt delimited by the triple apostrophes in the best way possible using your knowledge about biology.
+        When possible, incorporate information delimited by the triple backticks in your answer.
+
         Limit yourself to 5 sentences unless otherwise specified by the prompt. 
-        If the prompt is not related to the topic of biological functions, respond with the response \"Sorry, I cannot help you with that\".
+
+        When possible, make your answer a bulleted list, adding "<br><br>" after each line break. Do not bold any texts by wrapping the texts with **.
+        Highlight any key/important words in your response. In order to highlight a text, wrap the text with <b> and </b>.
+        Use "-" before each bullet point.
+
+        If you are unable to respond to the prompt using either your knowledge about biology, or by using the information delimited by the triple backticks, 
+        then add 'what is' in front of the prompt and then attempt to respond to it.
+        
+        If you still are unable to respond to the prompt, then respond with the response \"Sorry, I cannot help you with that\".
         
         ```{info}```
 
@@ -42,13 +52,13 @@ def gemini_chat():
         response = model.generate_content(prompt)
 
         buttonprompt = f"""
-        Using the prompt delimited by the triple apostrophes, choose one of the words within the triple backticks which represent some biological functions which is the most relevant to the prompt. 
+        Using the information delimited by the triple apostrophes, choose one of the words within the triple backticks which represent some biological functions which is the most relevant to the prompt. 
         Your response should only include that word, and no additional words. If none of the words are relevant, your response should be "none".
         
         Do not respond with any word which is not in the list within the triple backticks, and respond with "none" instead if this is the case.
         Do not include any additional words, only include one word which is the word in the list.
 
-        '''{prompt}'''
+        '''{response.text}'''
 
         ```{buttons}```
 
