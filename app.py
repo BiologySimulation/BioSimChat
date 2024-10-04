@@ -52,11 +52,10 @@ def gemini_chat():
         response = model.generate_content(prompt)
 
         buttonprompt = f"""
-        Using the information delimited by the triple apostrophes, choose one of the words within the triple backticks which represent some biological functions which is the most relevant to the prompt. 
-        Your response should only include that word, and no additional words. If none of the words are relevant, your response should be "none".
-        
-        Do not respond with any word which is not in the list within the triple backticks, and respond with "none" instead if this is the case.
-        Do not include any additional words, only include one word which is the word in the list.
+        Using the prompt delimited by the triple apostrophes, choose one of the words within the triple backticks which is the most relevant to the prompt.
+        Do not include any words which are not within the triple backticks in your response. 
+        Your response should include at most 1 word.
+        If none of the words are relevant, your response should be "none".
 
         '''{response.text}'''
 
