@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import os
 from flask_cors import CORS
+import json
 
 
 # Load environment variables
@@ -14,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 info = open('info.txt', 'r').read()
-buttons = open('buttons.txt', 'r').read()
+buttons = json.load(open('buttons.json'))
 
 # Get API key from environment variables
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
@@ -52,12 +53,11 @@ def gemini_chat():
         response = model.generate_content(prompt)
 
         buttonprompt = f"""
-        Using the prompt delimited by the triple apostrophes, choose one of the words within the triple backticks which is the most relevant to the prompt.
-        Do not include any words which are not within the triple backticks in your response. 
-        Your response should include at most 1 word.
-        If none of the words are relevant, your response should be "none".
+        Choose one of the keys in JSON text, which is delimited by the triple backticks, which is the most relevant to the prompt delimited by the triple apostrophes.
+        Your response should be the value in the JSON text of the key which you chose. Your response should only include that value, and nothing else. 
+        If none of the keys are relevant, your response should be "none".
 
-        '''{response.text}'''
+        '''{prompt}'''
 
         ```{buttons}```
 
