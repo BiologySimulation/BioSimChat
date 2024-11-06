@@ -73,8 +73,8 @@ def gemini_chat():
         # Return the bot's reply to the frontend
         if buttonresponse.endswith("\n"):
             buttonresponse = buttonresponse.removesuffix("\n")
-        if buttonresponse.endswith(" "):
-            buttonresponse = buttonresponse.removesuffix("")
+        while buttonresponse.endswith(" "):
+            buttonresponse = buttonresponse.removesuffix(" ")
         output = jsonify({"reply": response.text, "button": buttons[buttonresponse]})
         return output
 
