@@ -74,13 +74,12 @@ def gemini_chat():
         if buttonresponse.endswith("\n"):
             buttonresponse = buttonresponse.removesuffix("\n")
         if buttonresponse.endswith(" "):
-            buttonresponse = buttonresponse.removesuffix(" ")
+            buttonresponse = buttonresponse.removesuffix("")
         output = jsonify({"reply": response.text, "button": buttons[buttonresponse]})
         return output
 
     except Exception as e:
         print(f"Error: {e}")
-        raise e
         return jsonify({"reply": "Sorry, there was an error processing your request.", "button": "none"}), 500
 
 
