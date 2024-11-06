@@ -53,25 +53,34 @@ def gemini_chat():
         response = model.generate_content(prompt)
 
         buttonprompt = f"""
-        Choose one of the keys in JSON text, which is delimited by the triple backticks, which is the most relevant to the prompt delimited by the triple apostrophes.
-        Your response should be the value in the JSON text of the key which you chose. Your response should only include that value, and nothing else. 
-        If none of the keys are relevant, your response should be "none".
+        The given prompt is delimited by the triple apostrophes.
+        The given Array is delimited by the triple backticks.
 
-        '''{prompt}'''
+        Your task is to pick one of the strings in the Array which is the most relevant to the prompt.
+        Your response should only include that string, and nothing else.
+        If none of the keys in the JSON text are relevant to the prompt, your response should be "none".
 
-        ```{buttons}```
+        '''{userinput}'''
+
+        ```{buttons.keys()}```
 
 
         """
 
         buttonresponse = model.generate_content(buttonprompt)
-        print(buttonresponse.text)
+        buttonresponse = buttonresponse.text
+        print(buttonresponse)
         # Return the bot's reply to the frontend
-        output = jsonify({"reply": response.text, "button": buttonresponse.text})
+        if buttonresponse.endswith("\n"):
+            buttonresponse = buttonresponse.removesuffix("\n")
+        if buttonresponse.endswith(" "):
+            buttonresponse = buttonresponse.removesuffix(" ")
+        output = jsonify({"reply": response.text, "button": buttons[buttonresponse]})
         return output
 
     except Exception as e:
         print(f"Error: {e}")
+        raise e
         return jsonify({"reply": "Sorry, there was an error processing your request.", "button": "none"}), 500
 
 

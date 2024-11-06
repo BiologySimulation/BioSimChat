@@ -40,5 +40,6 @@
     "diaphragm": "diaphragmonly",
     "stomach": "stomach",
     "skeletal system": "skeletal system",
-    "neuron": "neuron"
+    "neuron": "neuron",
+    "none": "none"
 }
