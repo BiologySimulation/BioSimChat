@@ -39,7 +39,7 @@
     "lung cross section": "lungcs",
     "diaphragm": "diaphragmonly",
     "stomach": "stomach",
-    "skeletal system": "skeletal system",
+    "skeletal system": "skeletal",
     "neuron": "neuron",
     "none": "none"
 }
