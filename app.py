@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import os
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import json
 
 
@@ -12,16 +14,28 @@ import json
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    "/gemini-chat": {
+        "origins": ["https://bio-sim.us", "http://bio-sim.us"]
+    }
+})
+
+# Configure rate limiter
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)
 
 info = open('info.txt', 'r').read()
 buttons = json.load(open('buttons.json'))
 
 # Get API key from environment variables
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 @app.route('/gemini-chat', methods=['POST'])
+@limiter.limit("10 per minute")
 def gemini_chat():
     # Get the user prompt from the request
     data = request.get_json()
@@ -84,4 +98,4 @@ def gemini_chat():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=443, ssl_context=('certificate.pem', 'private.pem'))
